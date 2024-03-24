@@ -110,7 +110,7 @@ def load_config():
 
     "logging" : true,
 
-    // These files, paths, or directories will not trigger the notif:
+    "_comment" : "These files, paths, or directories will not trigger the notif",
     "path_block" : [
         "index.html", "favicon.ico"
     ],
