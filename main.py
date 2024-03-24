@@ -1,33 +1,45 @@
 """
-*   Tarpit.
-*    
-*   vs1m, 2024.
+*   Tar-pit.
+*
+*   "It's like a HoneyPot, 
+*    but Tar instead of Honey, 
+*    and a Pit instead of a Pot"
+*
 """
+
 import os, json, datetime
 from flask import Flask, request
 
 ### Modules ###
-from modules import discord, filter, logging
+from modules import postoffice, filter, logging
+
 
 ### Global Variables ###
 # Get these from settings.json
-HOST        = "0.0.0.0"
-PORT        = "7777"
-LOGGING     = False
-PATH_BLOCK  = []
-WEBHOOK     = None
-
 app = Flask(__name__)
+
+HOST        = "0.0.0.0"
+PORT        = "8123"
+LOGGING     = False
+WEBHOOK     = None
+PATH_BLOCK  = []
+
 
 ### Paths ###
 @app.route("/")
-@app.route("/index.html")
 def index():
-    return ""
+    handle_request( "index.html", request )
+    return "200"
 
 
 @app.route("/<path:path>")
 def paths( path ):
+    handle_request( path, request )
+    return "200"
+
+
+### Helper functions ###
+def handle_request( path, request ) -> None:
     data = {
         "path"    : "",
         "address" : "",
@@ -39,10 +51,10 @@ def paths( path ):
     if path in PATH_BLOCK:
         # Don't log Favicon.
         if path == "favicon.ico": 
-            return "200"
+            return 
 
         log( f"[{datetime.datetime.now()}][{request.remote_addr}] BLOCKED PATH -> { path }" )
-        return "200"
+        return 
     
     try:
         data[ "path" ]    = path
@@ -55,12 +67,14 @@ def paths( path ):
     except Exception as e:
         print( "! exception, details: ", e )
 
-    discord.send( data, WEBHOOK )
+    #
+    #   Send an alert to the set up instance. 
+    #
+    postoffice.send( data )
 
-    return "200"
+    return 
 
 
-### Helper functions ###
 def log( msg ):
     if LOGGING:
         logging.write( msg )
@@ -96,6 +110,7 @@ def load_config():
 
     "logging" : true,
 
+    // These files, paths, or directories will not trigger the notif:
     "path_block" : [
         "index.html", "favicon.ico"
     ],
@@ -104,7 +119,7 @@ def load_config():
 }        
 """ )
         
-        print( "!!! CREATED settings.json, REMEMBER TO ADD YOUR WEBHOOK ADDRESS" )
+        print( "!!! CREATED settings.json. \n!!! RESTART, AND REMEMBER TO ADD YOUR WEBHOOK ADDRESS" )
         exit()
 
     try:
@@ -133,4 +148,8 @@ def load_config():
 
 if __name__ == "__main__":
     load_config()
+    
+    # initalization of the messaging
+    postoffice.initialization( WEBHOOK )
+    
     app.run( host= HOST, port= PORT )
