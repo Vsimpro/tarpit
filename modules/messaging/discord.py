@@ -19,6 +19,7 @@ class Discord_hook:
         _headers += "\n"
 
         _path    = f"+ Path requested: \n\t> { data[ 'path' ]}\n"
+        _path    = f"+ Params: \n\t> { data[ 'params' ]}\n"
         _address = f"+ Remote address: \n\t> { data[ 'address' ] }\n" 
         _cookies = f"+ Cookies: \n\t> { data[ 'cookies' ] }\n"
 
@@ -32,7 +33,7 @@ class Discord_hook:
         message = { 
             "content" : self.beautify( data )
         }
-        
+
         if self.webhook == None:
             print( "[!] [DISCORD] Can't send to webhook: Webhook is 'None'" )
             return False

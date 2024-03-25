@@ -42,6 +42,7 @@ def paths( path ):
 def handle_request( path, request ) -> None:
     data = {
         "path"    : "",
+        "params"  : "",
         "address" : "",
         "headers" : "",
         "cookies" : "",
@@ -58,6 +59,7 @@ def handle_request( path, request ) -> None:
     
     try:
         data[ "path" ]    = path
+        data[ "params" ]  = request.args
         data[ "cookies" ] = request.cookies
         data[ "address" ] = request.remote_addr
         data[ "headers" ] = dict( request.headers )
