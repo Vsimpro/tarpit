@@ -19,11 +19,11 @@ class Discord_hook:
         _headers += "\n"
 
         _path    = f"+ Path requested: \n\t> { data[ 'path' ]}\n"
-        _path    = f"+ Params: \n\t> { data[ 'params' ]}\n"
+        _params    = f"+ Params: \n\t> { data[ 'params' ]}\n"
         _address = f"+ Remote address: \n\t> { data[ 'address' ] }\n" 
         _cookies = f"+ Cookies: \n\t> { data[ 'cookies' ] }\n"
 
-        s_data = f"```\n{ _path }\n{ _address }\n{ _headers }\n{ _cookies }\n```"
+        s_data = f"```\n{ _path }\n{ _params }\n{ _address }\n{ _headers }\n{ _cookies }\n```"
 
         return s_data
 
