@@ -39,7 +39,7 @@ class Discord_hook:
             return False
 
         response = requests.post(
-            "https://discord.com/api/webhooks/" + self.webhook,
+            "https://discord.com/api/webhooks/" + self.webhook.replace("https://discord.com/api/webhooks/", ""),
             json = message
         )
 
